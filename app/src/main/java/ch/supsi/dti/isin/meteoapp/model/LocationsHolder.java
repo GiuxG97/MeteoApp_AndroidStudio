@@ -21,7 +21,7 @@ public class LocationsHolder {
 
     private LocationsHolder(Context context) {
         mLocations = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             Location location = new Location();
             location.setName("Location # " + i);
             mLocations.add(location);
@@ -39,5 +39,9 @@ public class LocationsHolder {
         }
 
         return null;
+    }
+
+    public void addLocation(int index, Location location){
+        this.mLocations.add(index, location);
     }
 }
