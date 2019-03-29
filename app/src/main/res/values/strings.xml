@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MeteoApp</string>
+    <string name="app_name">Meteo2.0</string>
+    <string name="k">°K</string>
 </resources>
