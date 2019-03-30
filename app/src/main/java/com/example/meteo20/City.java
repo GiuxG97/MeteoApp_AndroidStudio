@@ -16,6 +16,7 @@ public class City {
     private double mActualTemperature;
     private double mMaxTemperature;
     private double mMinTemperature;
+    private double temperatureNotify = 0;
     private String mIcon;
 
     public City() {
@@ -55,13 +56,14 @@ public class City {
         this.mDateOfAdding = new Date();
     }
 
-    public City(String mCity, String mNation, double lat, double lon, double mActualTemperature) {
+    public City(String mCity, String mNation, double lat, double lon, double mActualTemperature, double tempNotify) {
         this.Id = UUID.randomUUID();
         this.mCity = mCity;
         this.mNation = mNation;
         this.mLat = lat;
         this.mLon = lon;
         this.mActualTemperature = mActualTemperature;
+        this.temperatureNotify = tempNotify;
         this.mDateOfAdding = new Date();
     }
 
@@ -187,6 +189,14 @@ public class City {
 
     public double getmLon() {
         return mLon;
+    }
+
+    public double getTemperatureNotify() {
+        return temperatureNotify;
+    }
+
+    public void setTemperatureNotify(double temperatureNotify) {
+        this.temperatureNotify = temperatureNotify;
     }
 
     @Override

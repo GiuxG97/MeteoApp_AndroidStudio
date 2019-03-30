@@ -77,8 +77,14 @@ public class DetailPagerActivity extends AppCompatActivity  {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 double temp = Double.parseDouble(input.getText().toString());
-                if(tMax.getText().toString().equals("°C"))
+                if(tMax.getText().toString().equals("°C")) {
                     temp +=  273.15;
+                }
+                city.setTemperatureNotify(temp);
+                MainActivity.myDB.updateRow(city);
+                LogService.setServiceAlarm(DetailPagerActivity.this, true);
+
+
                 //todo: inserire questatemperatura nel  db, in modo  tale che in backgroundfaccio la richiesta e controllo la temperatura.
 
             }

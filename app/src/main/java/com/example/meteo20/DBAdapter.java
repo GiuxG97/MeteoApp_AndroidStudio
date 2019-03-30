@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class DBAdapter {
 
@@ -20,7 +19,8 @@ public class DBAdapter {
     public static final String KEY_LAT = "lat";
     public static final String KEY_LON = "lon";
     public static final String KEY_ACTUAL = "actual";
-    public static final String[] ALL_KEYS = new String[]{KEY_ROWID, KEY_NAME, KEY_CAPITAL, KEY_LAT, KEY_LON, KEY_ACTUAL};
+    public static final String KEY_TEMPNOTIFY = "tempNotify";
+    public static final String[] ALL_KEYS = new String[]{KEY_ROWID, KEY_NAME, KEY_CAPITAL, KEY_LAT, KEY_LON, KEY_ACTUAL, KEY_TEMPNOTIFY};
 
     public static String DATABASE_NAME = "cit19.db";
     public static final String DATABASE_TABLE = "mainToDo";
@@ -34,8 +34,9 @@ public class DBAdapter {
                     + KEY_CAPITAL + " TEXT,"
                     + KEY_LAT + " NUMBER,"
                     + KEY_LON + " NUMBER,"
-                    + KEY_ACTUAL + " NUMBER" +
-                    ");";
+                    + KEY_ACTUAL + " NUMBER,"
+                    + KEY_TEMPNOTIFY + " NUMBER"
+                    + ");";
 
 
     private final Context context;
@@ -75,6 +76,7 @@ public class DBAdapter {
         initialValues.put(KEY_LAT, c.getmLat());
         initialValues.put(KEY_LON, c.getmLon());
         initialValues.put(KEY_ACTUAL, c.getmActualTemperature());
+        initialValues.put(KEY_TEMPNOTIFY, c.getTemperatureNotify());
         // Insert the data into the database.
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
@@ -89,9 +91,22 @@ public class DBAdapter {
         newValues.put(KEY_LAT, c.getmLat());
         newValues.put(KEY_LON, c.getmLon());
         newValues.put(KEY_ACTUAL, c.getmActualTemperature());
+        newValues.put(KEY_TEMPNOTIFY, c.getTemperatureNotify());
         // Insert it into the database.
         return db.update(DATABASE_TABLE, newValues, where, null) != 0;
     }//KEY_LAT,KEY_LON,KEY_ACTUAL
+
+    public boolean updateRow(City c){
+        String where = KEY_NAME + "=" + c.getmCity();
+        ContentValues newValues = new ContentValues();
+        newValues.put(KEY_NAME, c.getmCity());
+        newValues.put(KEY_CAPITAL, c.getmNation());
+        newValues.put(KEY_LAT, c.getmLat());
+        newValues.put(KEY_LON, c.getmLon());
+        newValues.put(KEY_ACTUAL, c.getmActualTemperature());
+        newValues.put(KEY_TEMPNOTIFY, c.getTemperatureNotify());
+        return db.update(DATABASE_TABLE, newValues, where, null) != 0;
+    }
 
 
     public void stampaTutto() {
@@ -152,9 +167,10 @@ public class DBAdapter {
             Double lat = c.getDouble(c.getColumnIndex(KEY_LAT));
             Double lon = c.getDouble(c.getColumnIndex(KEY_LON));
             Double actual = c.getDouble(c.getColumnIndex(KEY_ACTUAL));
+            Double tempNotify = c.getDouble(c.getColumnIndex(KEY_TEMPNOTIFY));
             City ob;
             try {
-                ob = new City(name, nation, lat, lon, actual);
+                ob = new City(name, nation, lat, lon, actual, tempNotify);
                 result.add(ob);
             } catch (Exception e) {
                 Log.e("Errore", "Error " + e.toString());
