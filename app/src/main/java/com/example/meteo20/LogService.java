@@ -60,6 +60,7 @@ public class LogService extends IntentService {
         for (City c : cities){
             if (c.getTemperatureNotify() > 0){
                 City city = RequestWeather.call_me_lat_lon(c.getmLat(), c.getmLon());
+                Log.i("CITY_RETURNED", "CITY: " + city.toString());
                 if (city.getmMaxTemperature() > city.getTemperatureNotify()){
                     mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

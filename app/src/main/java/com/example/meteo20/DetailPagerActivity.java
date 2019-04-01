@@ -84,9 +84,6 @@ public class DetailPagerActivity extends AppCompatActivity  {
                 MainActivity.myDB.updateRow(city);
                 LogService.setServiceAlarm(DetailPagerActivity.this, true);
 
-
-                //todo: inserire questatemperatura nel  db, in modo  tale che in backgroundfaccio la richiesta e controllo la temperatura.
-
             }
         });
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

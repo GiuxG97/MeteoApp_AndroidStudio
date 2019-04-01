@@ -22,7 +22,7 @@ public class DBAdapter {
     public static final String KEY_TEMPNOTIFY = "tempNotify";
     public static final String[] ALL_KEYS = new String[]{KEY_ROWID, KEY_NAME, KEY_CAPITAL, KEY_LAT, KEY_LON, KEY_ACTUAL, KEY_TEMPNOTIFY};
 
-    public static String DATABASE_NAME = "cit19.db";
+    public static String DATABASE_NAME = "cit20.db";
     public static final String DATABASE_TABLE = "mainToDo";
     public static final int DATABASE_VERSION = 2; // The version number must be incremented each time a change to DB structure occurs.
     //SQL statement to create database
@@ -97,7 +97,7 @@ public class DBAdapter {
     }//KEY_LAT,KEY_LON,KEY_ACTUAL
 
     public boolean updateRow(City c){
-        String where = KEY_NAME + "=" + c.getmCity();
+        String where = KEY_LAT + "=" + c.getmLat() + " AND " + KEY_LON + "=" + c.getmLon();
         ContentValues newValues = new ContentValues();
         newValues.put(KEY_NAME, c.getmCity());
         newValues.put(KEY_CAPITAL, c.getmNation());
