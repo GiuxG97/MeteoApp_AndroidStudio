@@ -1,0 +1,105 @@
+%% Esempio per lo stile supsi
+\documentclass[twoside]{supsistudent} 
+
+% per settare noindent
+\setlength{\parindent}{0pt}
+
+% per le immagini float
+\usepackage{float}
+
+
+% Crea un capitolo senza numerazione che pero` appare nell'indice %
+\newcommand{\problemchapter}[1]{%
+  \chapter*{#1}%
+  \addcontentsline{toc}{chapter}{#1}%
+\markboth{#1}{#1}
+}
+
+% Numerazione delle appendici secondo norma
+\addto\appendix{
+\renewcommand{\thesection}{\Alph{chapter}.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}}
+
+\setcounter{secnumdepth}{5} 	%per avere più livelli nei titoli
+\setcounter{tocdepth}{5}		%per avere più livelli nell'indice
+
+
+\titolo{Progetto MeteoApp - Android Studio}
+\studente{Fiori Paolo \vspace{1em}\\ Giussani Luca \vspace{1em}\\ Maccarini Marco}
+\relatore{-}
+\correlatore{-}
+\committente{Galli Vanni}
+\corso{Ingegneria informatica}
+\modulo{M02074 - Sviluppo di applicazioni "mobile"}
+\anno{2018-2019}
+
+
+
+\begin{document}
+
+\pagenumbering{alph}
+\maketitle
+\onehalfspacing
+\frontmatter
+
+
+\pagenumbering{roman}
+\tableofcontents
+
+%\newpage
+\mainmatter
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+\chapter{Requisiti}
+
+\chapter{Soluzione proposta}
+L’applicazione è stata creata con le impostazioni richieste e prefissate, ovvero con l’aggiunta di due Activity: una per la lista delle entry che sono le nostre città ed una per i dettagli della entry selezionata.
+Si può passare da una Activity all’altra premendo una città nella pagina di lista mentre nella pagina di dettaglio questo è possibile premendo il tasto indietro.
+Nella prima pagina sono visualizzate le informazioni principali della città, ovvero oltre al nome sono visibili anche il fuso orario, la data e, cosa molto importante, la bandiera della nazione in cui si trova il luogo interessato.
+
+
+\chapter{Implementazione}
+
+\section{Schermata di list-details}
+Questa pagina è organizzata prevedendo un fragment per la lista delle entry ed un fragment per il contenuto della lista (rispettivamente fragment\_list e list\_item).
+Come già specificato sopra il list\_item contiene un’immagine che è la bandiera della nazione interessata, il nome, la data ed il Time Zone che è il fuso orario della località.
+Per aggiungere una nuova località possibile utilizzare l’elemento di tipo menu premendo il tasto “+” in modo da poter accedere ad un dialog che richiede il nome della località che si desidera aggiungere. Una volta digitata la località si aprirà un altro dialog che riporta tutti i risultati della richiesta al meteo, ovvero tutte le località risultanti con il nome inserito. A questo punto premendo sulla località preferita possiamo definire quale sarà quella aggiunta alla lista delle entry.
+
+\section{Schermata di dettaglio della città}
+Questa pagina è invece organizzata prevedendo un fragment\_entry che prevede oltre all’immagine del meteo (classica informazione riguardo il tempo: soleggiato, nuvoloso etc.) ed alla relativa descrizione, anche informazioni riguardo temperature massime, minime e attuali.
+In questa schermata è possibile, mediante un elemento di menù, aggiungere una possibilità di notifica dopo 60 secondi che riporta il nome della città scelta e la relativa temperatura. Per questo motivo la notifica è statica e l’utente sceglie solo se la vuole ricevere, non quando.
+
+\section{Aggiunta nuova località}
+Per aggiungere una nuova città bisogna premere su “+” nella schermata di lista e seguendo i passaggi precedentemente indicati si potrà creare un oggetto di tipo City con i relativi campi indicati.
+
+\subsection{Scelta della città esatta}
+Una volta inserito il nome della città è possibile scegliere tra i risultati della richiesta.
+Inizialmente avevamo problemi in quanto inserendo una città non è detto che, avendo nomi simili se non uguali, veniva scelta per forza quella desiderata e non un’altra. Per risolvere questo problema è stata implementata una classe “FromNameToLatLon” che crea una richiesta HTTP la quale ritorna un json contenente molte informazioni. Tra queste informazioni a noi interessa “Results” che appunto contiene informazioni riguardo ai risultati, ovvero le località che sono state ritornate dalla richiesta precedente. Questi risultati vengono parsati, conoscendo la struttura, e vengono visualizzati in un dialog successivo.
+
+\subsection{Bandiera associata alla città}
+Per permettere di visualizzare la bandiera della nazione di una determinata località è stata implementata un’altra classe, ovvero “RequestFlag” che compone un’altra richiesta http per far ritornare un oggetto di tipo Drawable che è la nostra bandiera.
+
+\subsection{Aggiunta nel database}
+Tutte le informazioni, in questo caso le città, vengono aggiunte all’interno di un database SQLite. La classe sviluppata è DBAdapter che permette alla MainActivity di interfacciarsi al DB creato. Mediante metodi implementati possiamo eseguire le principali operazioni sul DB, come aggiungere una nuova città e caricarle in fase iniziale dell’applicazione ad esempio mediante metodi di insert, update, delete e get (in tutte le loro possibilità messe a disposizione.
+Il Database viene creato aggiungendo una nuova tabella per le città con i seguenti campi (colonne):
+\begin{itemize}
+\item \_ID (Chiave primaria autoincrementale, INTEGER)
+\item NAME (TEXT NOT NULL)
+\item CAPITAL (TEXT)
+\item LAT (NUMBER)
+\item LON (NUMBER)
+\item ACTUAL (NUMBER)
+\item TEMPNOTIFY (NUMBER)
+\end{itemize}
+
+Il nome del DB come il nome di tutte le colonne viene scelto cambiando il campo della classe DBAdapter adeguato. In questo modo possiamo personalizzare il Database e le Tabelle, così come le colonne di quest’ultima.
+
+\section{GPS}
+Per portare a termine questo progetto come richiesto abbiamo fatto utilizzo del GPS per permettere di aggiornare l’unica città sempre presente nell’applicazione, ovvero quella corrente.
+Per far uso del GPS del telefono abbiamo dovuto richiedere il permesso all’utente in quanto Android lo prevede essendo ritenuto un permesso “dangerous”. Questo permesso viene richiesto all’utente mediante un metodo del MainActivity che lo richiede in runtime (da noi definito come “askPermission”). Abbiamo fatto utilizzo di ACCESS\_FINE\_LOCATION in modo da avere a disposizione una precisione più alta nella localizzazione del dispositivo. 
+Come indicato nelle slide, per semplificare il funzionamento delle API abbiamo deciso di appoggiarci all’utilizzo di una libreria apposita per questo compito, ovvero SMART-LOCATION, la cui dipendenza è stata aggiunta nel file “build.grandle” in versione 3.3.3.
+
+
+\end{document}
